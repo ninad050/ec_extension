@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.ec.ecsmart</groupId>
+		<artifactId>ecsm-parent-pom</artifactId>
+		<version>0.0.1-beta1-SNAPSHOT</version>
+    </parent>
+    <name>ecsm-app</name>
+    <artifactId>ecsm-app</artifactId>
+    <packaging>war</packaging>
+	<properties>
+		<main.basedir>${project.parent.basedir}</main.basedir>
+		<extension.id>ECSM</extension.id> <!-- Max five letters, is added as prefix to all generated things -->
+        <extension.description>EC smart extension</extension.description>
+        <extension.version>${project.version}</extension.version>
+        <extension.requires><![CDATA[>12.1.0]]></extension.requires>
+        <extension.provider>EnergyComponents-Framework</extension.provider>
+	</properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.4</version>
+            </plugin>
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>2.0.0.Final</version>
+                <configuration>
+                    <server-groups>
+                        <server-group>ec-server-group</server-group>
+                    </server-groups>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <SCM-Revision>${changeSet}</SCM-Revision>
+                            <Build-Time>${buildDateTime}</Build-Time>
+                            <SCM-Branch>${scmBranch}</SCM-Branch>
+                            <Extension-Id>${extension.id}</Extension-Id>
+                            <Extension-Name>${project.artifactId}</Extension-Name>
+                            <Extension-Description>${extension.description}</Extension-Description>
+                            <Extension-Version>${extension.version}</Extension-Version>
+                            <Extension-Requires>${extension.requires}</Extension-Requires>
+                            <Extension-Provider>${extension.provider}</Extension-Provider>
+                        </manifestEntries>
+                    </archive>
+					<!-- <webResources>
+						<resource>
+						  <directory>${main.basedir}/ecsm-app-web/dist/ecApp/</directory>
+						  <targetPath>web</targetPath>
+						</resource>
+					  </webResources> -->
+                </configuration>
+            </plugin>
+
+            <!-- Create keystore with : -->
+            <!-- keytool -genkey -alias keyalias -keyalg RSA -keystore /src/keystore/keystore.jks -storepass energy -->
+            <!-- Or get a proper signed certificate from a CA-->
+            <!-- The exension will be validated against the keystore bundled with EC located in frmw-core/src/main/resources/extensionkeystore/keystore.jks-->
+            <!-- EC will accept any certificate at the moment, but will not allow unsigned extensions -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jarsigner-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>sign</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <keystore>src/keystore/keystore.jks</keystore>
+                    <alias>keyalias</alias>
+                    <storepass>energy</storepass>
+                    <keypass>energy</keypass>
+                    <removeExistingSignatures>true</removeExistingSignatures>
+                </configuration>
+            </plugin>
+
+
+            <!-- Deploy and migrate to EC. To run :  or bind it to an appropriate phase-->
+            <!-- mvn install ecextension:deploy -->
+            <plugin>
+                <groupId>com.ec.extension.maven</groupId>
+                <artifactId>ecextension-maven-plugin</artifactId>
+                <version>1.2-SNAPSHOT</version>
+                <configuration>
+                    <groupId>com.ec.ecsmart</groupId>
+                    <artifactId>ecsm-app</artifactId>
+                    <ecappurl>http://localhost:8080</ecappurl>
+                    <username>restuser</username>
+                    <password>restuser</password>
+                    <clientsecret>de0b9d98-7891-4c84-9522-4c7033a23455</clientsecret>
+                    <timeout>60</timeout>
+                    <force>true</force>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>12</source>
+                    <target>12</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-ref owner-cntx="600" class-name="TANK" version="1.0">
+    <app-space-cntx id="ECSM">
+        <class-attribute-cnfg attribute-name="ECSM_OP_AREA_NAME" is-key="N" data-type="STRING" db-mapping-type="FUNCTION">
+            <db-sql-syntax>EcDp_Ecm.getAreaName(OP_AREA_ID)</db-sql-syntax>
+        </class-attribute-cnfg>
+        <class-attribute-cnfg attribute-name="ECSM_CP_COL_POINT_NAME" is-key="N" data-type="STRING" db-mapping-type="FUNCTION">
+            <db-sql-syntax>EcDp_Ecm.getCollectionPointName(CP_COL_POINT_ID)</db-sql-syntax>
+        </class-attribute-cnfg>
+        <class-attribute-cnfg attribute-name="ECSM_OP_FCTY_1_NAME" is-key="N" data-type="STRING" db-mapping-type="FUNCTION">
+            <db-sql-syntax>EcDp_Ecm.getFacilityName(OP_FCTY_CLASS_1_ID)</db-sql-syntax>
+        </class-attribute-cnfg>
+        <class-attribute-cnfg attribute-name="ECSM_CP_OPERATOR_ROUTE" is-key="N" data-type="STRING" db-mapping-type="FUNCTION">
+            <db-sql-syntax>EcDp_Ecm.getOperatorRouteName(CP_OPERATOR_ROUTE_ID)</db-sql-syntax>
+        </class-attribute-cnfg>
+        <class-attribute-cnfg attribute-name="ECSM_CP_AREA_NAME" is-key="N" data-type="STRING" db-mapping-type="FUNCTION">
+            <db-sql-syntax>EcDp_Ecm.getAreaName(CP_AREA_ID)</db-sql-syntax>
+        </class-attribute-cnfg>
+        <!-- <class-attribute-cnfg attribute-name="ECSM_OP_PRODUCTIONUNIT" is-key="N" data-type="STRING" db-mapping-type="FUNCTION">
+            <db-sql-syntax>EcDp_Ecm.getProductionUnitName(OP_PRODUCTIONUNIT_ID)</db-sql-syntax>
+        </class-attribute-cnfg> -->
+    </app-space-cntx>
+</class-ref>
+
+
+
+
+
